@@ -1,0 +1,33 @@
+/* full screen */
+        .fullscreen {
+            height: 100vh !important;
+            width: 100vw !important;
+        }
+
+        .fullscreen-center-v {
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+        }
+
+        .fullscreen-center-h {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .no-padding {
+            padding: 0 !important;
+        }
+
+        .no-margin {
+            margin: 0 !important;
+        }
+
+        .red-team {
+            background-color: red;
+            height: 100vh;
+        }
+
+        .blue-team {
+            background-color: blue;
+            height: 100vh;
+        }
