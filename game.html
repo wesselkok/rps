@@ -16,6 +16,7 @@
     <div class="main row fullscreen no-margin">
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding red-team">
             <ul id="messages"></ul>
+            <button id="getresult">Get Result</button>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding blue-team">
 
@@ -32,6 +33,18 @@
             });
             socket.on('chat message', function (msg) {
                 $('#messages').append($('<li>').text(msg));
+            });
+            $('#getresult').click(function(){
+                socket.emit('game result');
+            });
+        
+            // Get Result back
+            socket.on('game get result', function(result){
+                if (result == null || result == -1){
+                    window.location.reload();
+                } else {
+                    $('#messages').append($('<li>').text("result " + result));
+                }
             });
         });
     </script>
