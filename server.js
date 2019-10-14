@@ -7,9 +7,14 @@ const express = require('express');
 // Static files
 app.use(express.static('public'));
 
-// Main get
+// Main Game get
+app.get('/game', function(req, res){
+  res.sendFile(__dirname + '/game.html');
+});
+
+// Player Control get
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/main.html');
+  res.sendFile(__dirname + '/player.html');
 });
 
 // On Connection listener

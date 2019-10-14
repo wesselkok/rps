@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Player</title>
+
+    <link href="main.css" rel="stylesheet" >
+    <link href="player.css" rel="stylesheet" >
+
+    <!-- BOOTSTRAP -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+    
+    <div class="main row fullscreen no-margin">
+        <div class="col-12 no-padding red-team">
+            <h1>Player</h1>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <!-- <script>
+        $(function () {
+            var socket = io();
+            $('form').submit(function () {
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+            socket.on('chat message', function (msg) {
+                $('#messages').append($('<li>').text(msg));
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        });
+    </script> -->
+</body>
+
+</html>
