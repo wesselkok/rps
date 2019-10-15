@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>RPS Game</title>
 
     <link href="main.css" rel="stylesheet" >
 
@@ -15,8 +15,9 @@
     
     <div class="main row fullscreen no-margin">
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding red-team">
+            <h1 id="votingheader" style="display: none">You can now vote for your team!</h1>
+            <div class="timer"><h2 id="timer"></h2></div>
             <ul id="messages"></ul>
-            <button id="getresult">Get Result</button>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding blue-team">
 
@@ -28,25 +29,116 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         $(function () {
+            RedLives = 3;
+            BlueLives = 3;
+
             var socket = io('', {
                 query: 'name=game'
             });
-            socket.on('chat message', function (msg) {
-                $('#messages').append($('<li>').text(msg));
-            });
+
+            // Start GameLoop
+            GameLoop();
+
+            
             $('#getresult').click(function(){
                 socket.emit('game result');
             });
-        
-            // Get Result back
+
+            // Game returns round result
             socket.on('game get result', function(result){
                 if (result == null || result == -1){
                     window.location.reload();
                 } else {
-                    $('#messages').append($('<li>').text("result " + result));
+                    RoundWon(result);
                 }
             });
+
+
+            //=== GameFunctions
+            // Reset Round
+            function ResetRound(){
+                socket.emit('game reset round');
+                GameLoop();
+            }
+
+            function CountDown(amountofseconds=10, oncomplete){
+                var counter = amountofseconds + 1;
+                var interval = setInterval(function() {
+                    counter--;
+                    $('#timer').text(counter);
+                    if (counter == 0) {
+                        // Display a login box
+                        clearInterval(interval);
+                        $('#timer').text('');
+                        oncomplete();
+                    }
+                }, 1000);
+            }
+
+            function StartRound(){
+                $('#votingheader').show();
+                socket.emit('showplayervoting');
+                // Start CountDown
+                CountDown(15, function() {
+                    // Run when Countdown is at zero
+                    $('#votingheader').hide();
+                    socket.emit('hideplayervoting');
+                    // Get Result back
+                    socket.emit('game result');
+                });
+            }
+
+            function GameLoop(){
+                if (RedLives > 0 && BlueLives > 0){
+                    StartRound()
+                } else if (RedLives == 0){
+                    GameOver('red');
+                } else {
+                    GameOver('blue');
+                }
+            }
+
+            function RoundWon(team){
+                if (team == 0){
+                    // Draw
+                    RedLives--;
+                    BlueLives--;
+                    $('#messages').append($('<li>').text("Draw"));
+                } else if (team == 1){
+                    // Red Won
+                    BlueLives--;
+                    $('#messages').append($('<li>').text("Red Won "));
+                } else {
+                    // Blue Won
+                    RedLives--;
+                    $('#messages').append($('<li>').text("Blue Won "));
+                }
+                UpdateLives();
+
+                // After 10 seconds reset game to next round
+                setTimeout(function(){
+                    ResetRound();
+                }, 10000);
+
+            }
+
+            // Update Lives display.
+            function UpdateLives(){
+
+            }
+
+            function GameOver(team){
+                // A team has won.
+                $('#messages').append($('<li>').text(`Team ${team} Won!`));
+                
+                // Restart game after 10 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 10000);
+            }
+
         });
+
     </script>
 </body>
 

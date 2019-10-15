@@ -52,22 +52,18 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
     if(socket.handshake.query.name != "game"){
         // New client connected
-        console.log('New client connected');
         var clientId = socket.id;
         var team = GetNewClientTeam();
         clients.push({
             'clientId': clientId,
             'team': team,
         });
-        console.log(team);
-        console.log(clientId);
+        console.log(`Client Connected: ${clientId} in team ${team}`);
         io.to(clientId).emit('team', team);
         socket.on('chat message', function(msg){
         io.emit('chat message', msg);
         });
     }
-
-    console.log(clients.length);
     
     // Disconnect
     socket.on('disconnect', function() {
@@ -94,7 +90,29 @@ io.on('connection', function(socket){
         }
     });
 
+    // Reset voting amounts to zero
+    socket.on('game reset round', function(){
+        ResetVotes(voting_red);
+        ResetVotes(voting_blue);
+        // enable voting
+        socket.broadcast.emit('voting status', true);
+    });
+
+    // Hide Player voting buttons
+    socket.on('hideplayervoting', function(){
+        console.log('Hide Player Voting');
+        socket.broadcast.emit('voting status', false);
+    });
+
+    // Show Player voting buttons
+    socket.on('showplayervoting', function(){
+        console.log('Show Player Voting');
+        socket.broadcast.emit('voting status', true);
+    });
+
+    // Game requests a winning team.
     socket.on('game result', function(){
+        console.log('Request Game Results');
         var result;
         if(socket.handshake.query.name != "game"){
             result = -1;
@@ -104,7 +122,7 @@ io.on('connection', function(socket){
         if (!itemRed || !itemBlue){
             result =  -1;
         } else {
-            // Check winning result. 0 = draw, 1 = red, 2 = blue
+            // Check winning result. -1 = failed, 0 = draw, 1 = red, 2 = blue
             if(itemRed.type == itemBlue.type){
                 result = 0;
             } else if (itemRed.type == "Rock"){
@@ -136,14 +154,19 @@ http.listen(port, function(){
 });
 
 function GetNewClientTeam(){
-    var RedCount = clients.filter(x => x.team == "red").length;
-    var BlueCount = clients.filter(x => x.team == "blue").length;
-    if (RedCount > BlueCount){
-        return 'blue';
-    }
-    return 'red';
+    return (clients.filter(x => x.team == "red").length >= clients.filter(x => x.team == "blue").length)? 'blue' : 'red';
 }
 
 function GetWinningItem(list){
-    return list.sort((a, b) => b.amount - a.amount)[0];
+    var item = list.sort((a, b) => b.amount - a.amount)[0];
+    if (item.amount == 0){
+        item = list[Math.floor(Math.random()*list.length)];
+    }
+    return item;
+}
+
+function ResetVotes(list){
+    list.forEach(e => {
+        e.amount = 0;
+    });
 }

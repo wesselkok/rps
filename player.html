@@ -50,9 +50,16 @@
                 $('#votingoptions').hide();
                 return false;
             });
+
             // Enable Voting
             socket.on('voting status', function (status) {
+                console.log(status);
                 (status)? $('#votingoptions').show() : $('#votingoptions').hide();
+            });
+
+            // Reconnect when connection is lost
+            socket.on('disconnect', () => {
+                window.location.reload();
             });
         });
     </script>
