@@ -20,11 +20,11 @@
                 <img src="img/IconRock_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Rock" />
                 <img src="img/IconPaper_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Paper" />
                 <img src="img/IconScissors_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Scissors" />
-
                 <img src="img/IconRock_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Rock" />
                 <img src="img/IconPaper_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Paper" />
                 <img src="img/IconScissors_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Scissors" />
             </div>
+            <h2 id="thankyou" style="display: none;">You just voted for your team!&nbsp;Check the screen for the results.</h2>
         </div>
     </div>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -37,27 +37,29 @@
             socket.on('team', function(_team){
                 team = _team;
                 if(team == 'red'){
-                    $('.main').addClass('red');
+                    $('body').addClass('red');
                     $('.triggerred').show();
                 } else {
-                    $('.main').addClass('blue');
+                    $('body').addClass('blue');
                     $('.triggerblue').show();
                 }
                 $('#team').text(team);
             });
 
-            $('.btn').click(function () {
+            $('.triggervote').click(function () {
                 socket.emit('vote', {
                     'team': team,
-                    'value': $(this).val(),
+                    'value': $(this).data('value'),
                 });
                 $('#votingoptions').hide();
+                $('#thankyou').show();
                 return false;
             });
 
             // Enable Voting
             socket.on('voting status', function (status) {
                 (status)? $('#votingoptions').show() : $('#votingoptions').hide();
+                $('#thankyou').hide();
             });
 
             // Reconnect when connection is lost

@@ -72,6 +72,8 @@
             <div id="timer"></div>
         </div>
 
+        <!-- GameOver -->
+        <h1 id="gameovermessage"></h1>
         <!-- MESSAGES -->
         <ul id="messages" class="hidden"></ul>
     </div>
@@ -109,9 +111,7 @@
             //=== GameFunctions
             // Reset Round
             function ResetRound(){
-                $('#reditemdisplay').text("");
-                $('#blueitemdisplay').text("");
-
+                $('#gameovermessage').text("");
                 $("#redteam-icon").removeClass("hidden");
                 $("#redteam-icon-wrapped").addClass("hidden");
                 $("#redteam-icon-crushed").addClass("hidden");
@@ -122,8 +122,8 @@
                 $("#blueteam-icon-crushed").addClass("hidden");
                 $("#blueteam-icon-snapped").addClass("hidden");
 
-                $('#blueitemdisplay').childer('img').addClass("hidden");
-                $('#reditemdisplay').childer('img').addClass("hidden");
+                $('#blueitemdisplay').children('img').addClass("hidden");
+                $('#reditemdisplay').children('img').addClass("hidden");
 
                 socket.emit('game reset round');
                 GameLoop();
@@ -169,10 +169,10 @@
             function RoundWon(result){
                 if (result.team == 0){
                     // Draw
-                    $('#messages').append($('<li>').text("Draw"));
+                    $('#gameovermessage').text("Draw!");
                 } else if (result.team == 1){
                     // Red Won
-                    $('#messages').append($('<li>').text("Red Won "));
+                    $('#gameovermessage').text("Team Red won this round!");
                     
                     // Remove lives
                     BlueLives--;
@@ -192,7 +192,7 @@
 
                 } else {
                     // Blue Won
-                    $('#messages').append($('<li>').text("Blue Won "));
+                    $('#gameovermessage').text("Team Blue won this round!");
 
                     // Remove lives
                     RedLives--;
@@ -251,7 +251,7 @@
 
             function GameOver(team){
                 // A team has won.
-                $('#messages').append($('<li>').text(`Team ${team} Won!`));
+                $('#gameovermessage').text(`Team ${team} Won!`);
                 
                 // Restart game after 10 seconds
                 setTimeout(() => {

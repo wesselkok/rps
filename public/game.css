@@ -70,6 +70,16 @@
 }
 
 .item-display img {
-    height:50px;
-    width:50px;
+    height: 20vh;
+    width: 20vh;
+}
+
+#gameovermessage{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 50px;
 }

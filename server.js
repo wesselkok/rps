@@ -60,9 +60,6 @@ io.on('connection', function(socket){
         });
         console.log(`Client Connected: ${clientId} in team ${team}`);
         io.to(clientId).emit('team', team);
-        socket.on('chat message', function(msg){
-        io.emit('chat message', msg);
-        });
     }
     
     // Disconnect
