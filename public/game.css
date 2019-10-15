@@ -8,12 +8,12 @@
 
 .red-team {
     /* background-color: red; */
-    /* height: 100vh; */
+    height: 100vh;
 }
 
 .blue-team {
     /* background-color: blue; */
-    /* height: 100vh; */
+    height: 100vh;
 }
 
 .votingheader {
@@ -60,4 +60,16 @@
 .heart {
     height: 50px;
     width: 50px;
+}
+
+.item-display {
+    position: absolute;
+    left:50%;
+    transform: translateX(-50%);
+    bottom:30px;
+}
+
+.item-display img {
+    height:50px;
+    width:50px;
 }

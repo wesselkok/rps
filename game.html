@@ -32,11 +32,12 @@
                 <img id="redteam-icon-wrapped" src="/img/red_team_wrapped.png" class="hidden" />
             </div>
 
-            
-            
-            
-            <ul id="messages"></ul>
-            <div id="reditemdisplay"></div>
+            <!-- ITEM -->
+            <div id="reditemdisplay" class="item-display">
+                <img class="scissors hidden" src="/img/IconScissors_RedTeam.png" />
+                <img class="rock hidden" src="/img/IconRock_RedTeam.png" />
+                <img class="paper hidden" src="/img/IconPaper_RedTeam.png" />
+            </div>
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 no-padding blue-team">
 
@@ -55,7 +56,12 @@
                 <img id="blueteam-icon-wrapped" src="/img/blue_team_wrapped.png" class="hidden" />
             </div>
 
-            <div id="blueitemdisplay"></div>
+            <!-- ITEM -->
+            <div id="blueitemdisplay" class="item-display">
+                <img class="scissors hidden" src="/img/IconScissors_BlueTeam.png" />
+                <img class="rock hidden" src="/img/IconRock_BlueTeam.png" />
+                <img class="paper hidden" src="/img/IconPaper_BlueTeam.png" />
+            </div>
         </div>
 
         <!-- LABEL -->
@@ -65,6 +71,9 @@
         <div class="timer">
             <div id="timer"></div>
         </div>
+
+        <!-- MESSAGES -->
+        <ul id="messages" class="hidden"></ul>
     </div>
 
 
@@ -112,6 +121,9 @@
                 $("#blueteam-icon-wrapped").addClass("hidden");
                 $("#blueteam-icon-crushed").addClass("hidden");
                 $("#blueteam-icon-snapped").addClass("hidden");
+
+                $('#blueitemdisplay').childer('img').addClass("hidden");
+                $('#reditemdisplay').childer('img').addClass("hidden");
 
                 socket.emit('game reset round');
                 GameLoop();
@@ -200,7 +212,7 @@
                 }
 
                 // Display item
-                //DisplayTeamItems(result);
+                DisplayTeamItems(result);
 
                 //UpdateLives();
 
@@ -214,12 +226,21 @@
             // Display chosen item for both teams.
             function DisplayTeamItems(result){
 
+                if (result.itemRed.type == "Rock"){
+                    $('#reditemdisplay .rock').removeClass("hidden");
+                } else if (result.itemRed.type == "Paper"){
+                    $('#reditemdisplay .paper').removeClass("hidden");
+                } else {
+                    $('#reditemdisplay .scissors').removeClass("hidden");
+                }
 
-
-                // result.itemRed -> type & amount
-                // result.itemBlue -> type & amount
-                $('#reditemdisplay').text(result.itemRed.type);
-                $('#blueitemdisplay').text(result.itemBlue.type);
+                if (result.itemBlue.type == "Rock") {
+                    $('#blueitemdisplay .rock').removeClass("hidden");
+                } else if (result.itemBlue.type == "Paper") {
+                    $('#blueitemdisplay .paper').removeClass("hidden");
+                } else {
+                    $('#blueitemdisplay .scissors').removeClass("hidden");
+                }
             }
 
             // // Update Lives display.
