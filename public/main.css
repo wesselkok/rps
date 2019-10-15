@@ -22,12 +22,6 @@
     margin: 0 !important;
 }
 
-.red-team {
-    background-color: red;
-    height: 100vh;
-}
-
-.blue-team {
-    background-color: blue;
-    height: 100vh;
+.hidden {
+    display: none;
 }

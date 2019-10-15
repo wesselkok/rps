@@ -1,1 +1,63 @@
 /* Game CSS */
+
+.game-background{
+    background-image: url('img/background.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.red-team {
+    /* background-color: red; */
+    /* height: 100vh; */
+}
+
+.blue-team {
+    /* background-color: blue; */
+    /* height: 100vh; */
+}
+
+.votingheader {
+    position: absolute;
+    top:20px;
+    left:50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: bold;
+    font-size:30px;
+}
+
+.timer {
+    position: absolute;
+    top:60px;
+    left:50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.team-icon {
+    height: 50%;
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+.team-icon img {
+    height: auto;
+    width: 100%;
+}
+
+.bluelives, .redlives {
+    position: absolute;
+    left:50%;
+    transform: translateX(-50%);
+    top:30px;
+} 
+
+.heart {
+    height: 50px;
+    width: 50px;
+}

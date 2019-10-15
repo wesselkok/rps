@@ -5,6 +5,7 @@
     <title>RPS Game</title>
 
     <link href="main.css" rel="stylesheet" >
+    <link href="game.css" rel="stylesheet">
 
     <!-- BOOTSTRAP -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -13,17 +14,56 @@
 
 <body>
     
-    <div class="main row fullscreen no-margin">
-        <div class="col-sm-12 col-md-6 col-lg-6 no-padding red-team">
-            <div id="redlives"></div>
-            <h1 id="votingheader" style="display: none">You can now vote for your team!</h1>
-            <div class="timer"><h2 id="timer"></h2></div>
+    <div class="main row fullscreen no-margin game-background">
+        <div class="col-sm-6 col-md-6 col-lg-6 no-padding red-team">
+
+            <!-- LIVES -->
+            <div id="redlives" class="redlives">
+                <img class="heart" src="/img/heart.png" />
+                <img class="heart" src="/img/heart.png" />
+                <img class="heart" src="/img/heart.png" />
+            </div>
+
+            <!-- TEAM ICON -->
+            <div class="team-icon">
+                <img id="redteam-icon" src="/img/red_team.png" />
+                <img id="redteam-icon-snapped" src="/img/red_team_snapped.png" class="hidden" />
+                <img id="redteam-icon-crushed" src="/img/red_team_crushed.png" class="hidden" />
+                <img id="redteam-icon-wrapped" src="/img/red_team_wrapped.png" class="hidden" />
+            </div>
+
+            
+            
+            
             <ul id="messages"></ul>
             <div id="reditemdisplay"></div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 no-padding blue-team">
-            <div id="bluelives"></div>
+        <div class="col-sm-6 col-md-6 col-lg-6 no-padding blue-team">
+
+            <!-- LIVES -->
+            <div id="bluelives" class="bluelives">
+                <img class="heart" src="/img/heart.png" />
+                <img class="heart" src="/img/heart.png" />
+                <img class="heart" src="/img/heart.png" />
+            </div>
+
+            <!-- TEAM ICON -->
+            <div class="team-icon">
+                <img id="blueteam-icon" src="/img/blue_team.png" />
+                <img id="blueteam-icon-snapped" src="/img/blue_team_snapped.png" class="hidden" />
+                <img id="blueteam-icon-crushed" src="/img/blue_team_crushed.png" class="hidden" />
+                <img id="blueteam-icon-wrapped" src="/img/blue_team_wrapped.png" class="hidden" />
+            </div>
+
             <div id="blueitemdisplay"></div>
+        </div>
+
+        <!-- LABEL -->
+        <div id="votingheader" class="votingheader" style="display: none">Vote for your team!</div>
+
+        <!-- TIMER -->
+        <div class="timer">
+            <div id="timer"></div>
         </div>
     </div>
 
@@ -62,6 +102,17 @@
             function ResetRound(){
                 $('#reditemdisplay').text("");
                 $('#blueitemdisplay').text("");
+
+                $("#redteam-icon").removeClass("hidden");
+                $("#redteam-icon-wrapped").addClass("hidden");
+                $("#redteam-icon-crushed").addClass("hidden");
+                $("#redteam-icon-snapped").addClass("hidden");
+
+                $("#blueteam-icon").removeClass("hidden");
+                $("#blueteam-icon-wrapped").addClass("hidden");
+                $("#blueteam-icon-crushed").addClass("hidden");
+                $("#blueteam-icon-snapped").addClass("hidden");
+
                 socket.emit('game reset round');
                 GameLoop();
             }
@@ -109,17 +160,49 @@
                     $('#messages').append($('<li>').text("Draw"));
                 } else if (result.team == 1){
                     // Red Won
-                    BlueLives--;
                     $('#messages').append($('<li>').text("Red Won "));
+                    
+                    // Remove lives
+                    BlueLives--;
+                    $("#bluelives").children("img:last").remove();
+
+                    // Show death
+                    if (result.itemRed.type == "Paper") {
+                        $("#blueteam-icon").addClass("hidden");
+                        $("#blueteam-icon-wrapped").removeClass("hidden");
+                    } else if (result.itemRed.type == "Rock") {
+                        $("#blueteam-icon").addClass("hidden");
+                        $("#blueteam-icon-crushed").removeClass("hidden");
+                    } else {
+                        $("#blueteam-icon").addClass("hidden");
+                        $("#blueteam-icon-snapped").removeClass("hidden");
+                    }
+
                 } else {
                     // Blue Won
-                    RedLives--;
                     $('#messages').append($('<li>').text("Blue Won "));
+
+                    // Remove lives
+                    RedLives--;
+                    $("#redlives").children("img:last").remove();
+
+                    // Show death
+                    if (result.itemBlue.type == "Paper"){
+                        $("#redteam-icon").addClass("hidden");
+                        $("#redteam-icon-wrapped").removeClass("hidden");
+                    } else if (result.itemBlue.type == "Rock"){
+                        $("#redteam-icon").addClass("hidden");
+                        $("#redteam-icon-crushed").removeClass("hidden");
+                    } else {
+                        $("#redteam-icon").addClass("hidden");
+                        $("#redteam-icon-snapped").removeClass("hidden");
+                    }
                 }
 
-                DisplayTeamItems(result);
+                // Display item
+                //DisplayTeamItems(result);
 
-                UpdateLives();
+                //UpdateLives();
 
                 // After 10 seconds reset game to next round
                 setTimeout(function(){
@@ -130,17 +213,20 @@
 
             // Display chosen item for both teams.
             function DisplayTeamItems(result){
+
+
+
                 // result.itemRed -> type & amount
                 // result.itemBlue -> type & amount
                 $('#reditemdisplay').text(result.itemRed.type);
                 $('#blueitemdisplay').text(result.itemBlue.type);
             }
 
-            // Update Lives display.
-            function UpdateLives(){
-                $('#redlives').text(RedLives);
-                $('#bluelives').text(BlueLives);
-            }
+            // // Update Lives display.
+            // function UpdateLives(){
+            //     $('#redlives').text(RedLives);
+            //     $('#bluelives').text(BlueLives);
+            // }
 
             function GameOver(team){
                 // A team has won.
