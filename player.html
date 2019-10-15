@@ -3,7 +3,7 @@
 
 <head>
     <title>Player</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="main.css" rel="stylesheet" >
     <link href="player.css" rel="stylesheet" >
 
@@ -13,19 +13,20 @@
 </head>
 
 <body>
-    
     <div class="main row fullscreen no-margin">
         <div class="col-12 no-padding">
-            <h1>Player</h1>
-            <form id="votingoptions">
-                <input class="btn btn-primary" type="button" value="Rock"/>
-                <input class="btn btn-primary" type="button" value="Paper"/>
-                <input class="btn btn-primary" type="button" value="Scissors"/>
-            </form>
+            <h1>Team <span id="team"></span></h1>
+            <div id="votingoptions">
+                <img src="img/IconRock_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Rock" />
+                <img src="img/IconPaper_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Paper" />
+                <img src="img/IconScissors_BlueTeam.png" style="display: none;" class="triggervote img-fluid triggerblue" data-value="Scissors" />
+
+                <img src="img/IconRock_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Rock" />
+                <img src="img/IconPaper_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Paper" />
+                <img src="img/IconScissors_RedTeam.png" style="display: none;" class="triggervote img-fluid triggerred" data-value="Scissors" />
+            </div>
         </div>
     </div>
-
-
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
@@ -37,9 +38,12 @@
                 team = _team;
                 if(team == 'red'){
                     $('.main').addClass('red');
+                    $('.triggerred').show();
                 } else {
-                    $('.main').addClass('blue'); 
+                    $('.main').addClass('blue');
+                    $('.triggerblue').show();
                 }
+                $('#team').text(team);
             });
 
             $('.btn').click(function () {
@@ -53,7 +57,6 @@
 
             // Enable Voting
             socket.on('voting status', function (status) {
-                console.log(status);
                 (status)? $('#votingoptions').show() : $('#votingoptions').hide();
             });
 

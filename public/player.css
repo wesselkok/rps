@@ -1,8 +1,25 @@
 /* Player CSS */
+*{
+    text-align: center;
+}
 .red {
-    background-color: red;
+    color: #efe5cb;
+    text-shadow: 2px 2px #a5652d;
+    background-color: #af3138;
 }
 
 .blue {
-    background-color: blue;
+    color: #8b7bb7;
+    text-shadow: 2px 2px #62597e;
+    background-color: #efe5cb;
+}
+
+img {
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+}
+
+#team {
+    text-transform: capitalize;
 }
