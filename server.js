@@ -145,7 +145,11 @@ io.on('connection', function(socket){
                 }
             }
         }
-        socket.emit('game get result', result);
+        socket.emit('game get result', {
+            team: result,
+            itemBlue: itemBlue,
+            itemRed: itemRed,
+        });
     });
 });
 

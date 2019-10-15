@@ -15,12 +15,15 @@
     
     <div class="main row fullscreen no-margin">
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding red-team">
+            <div id="redlives"></div>
             <h1 id="votingheader" style="display: none">You can now vote for your team!</h1>
             <div class="timer"><h2 id="timer"></h2></div>
             <ul id="messages"></ul>
+            <div id="reditemdisplay"></div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 no-padding blue-team">
-
+            <div id="bluelives"></div>
+            <div id="blueitemdisplay"></div>
         </div>
     </div>
 
@@ -46,7 +49,7 @@
 
             // Game returns round result
             socket.on('game get result', function(result){
-                if (result == null || result == -1){
+                if (result.team == null || result.team == -1){
                     window.location.reload();
                 } else {
                     RoundWon(result);
@@ -57,6 +60,8 @@
             //=== GameFunctions
             // Reset Round
             function ResetRound(){
+                $('#reditemdisplay').text("");
+                $('#blueitemdisplay').text("");
                 socket.emit('game reset round');
                 GameLoop();
             }
@@ -98,13 +103,11 @@
                 }
             }
 
-            function RoundWon(team){
-                if (team == 0){
+            function RoundWon(result){
+                if (result.team == 0){
                     // Draw
-                    RedLives--;
-                    BlueLives--;
                     $('#messages').append($('<li>').text("Draw"));
-                } else if (team == 1){
+                } else if (result.team == 1){
                     // Red Won
                     BlueLives--;
                     $('#messages').append($('<li>').text("Red Won "));
@@ -113,6 +116,9 @@
                     RedLives--;
                     $('#messages').append($('<li>').text("Blue Won "));
                 }
+
+                DisplayTeamItems(result);
+
                 UpdateLives();
 
                 // After 10 seconds reset game to next round
@@ -122,9 +128,18 @@
 
             }
 
+            // Display chosen item for both teams.
+            function DisplayTeamItems(result){
+                // result.itemRed -> type & amount
+                // result.itemBlue -> type & amount
+                $('#reditemdisplay').text(result.itemRed.type);
+                $('#blueitemdisplay').text(result.itemBlue.type);
+            }
+
             // Update Lives display.
             function UpdateLives(){
-
+                $('#redlives').text(RedLives);
+                $('#bluelives').text(BlueLives);
             }
 
             function GameOver(team){
